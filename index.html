@@ -1,0 +1,457 @@
+<!DOCTYPE html>          
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Declaração</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            color: white;
+            position: relative;
+        }
+
+        /* Estilo do céu estrelado */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 1.5s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .welcome {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+        .heart {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            position: relative;
+            transform: rotate(-45deg);
+            animation: pulse 1s infinite;
+            margin-bottom: 30px;
+        }
+        .heart::before, .heart::after {
+            content: "";
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .heart::before {
+            top: -50px;
+            left: 0;
+        }
+        .heart::after {
+            left: 50px;
+            top: 0;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1) rotate(-45deg); }
+            50% { transform: scale(1.2) rotate(-45deg); }
+            100% { transform: scale(1) rotate(-45deg); }
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            color: black;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        img {
+            width: 300px;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+        /* Corações flutuantes */
+        .floating-heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            transform: rotate(-45deg); /* Corrigido: corações flutuantes agora de cabeça para cima */
+            animation: floatUp linear infinite;
+        }
+        .floating-heart::before, .floating-heart::after {
+            content: "";
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .floating-heart::before {
+            top: -15px;
+            left: 0;
+        }
+        .floating-heart::after {
+            left: 15px;
+            top: 0;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(-45deg) scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(-45deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body onload="gerarCoracoesFlutuantes(); gerarEstrelas()">
+    <div class="welcome">
+        <h1>Bem-vinda, Sarah!</h1>
+        <button onclick="startExperience()">Clique aqui para continuar</button>
+    </div>
+    <div class="container" id="spotifySection">
+        <h2>Ouça nossa música especial!</h2>
+        <iframe id="spotifyPlayer" style="border-radius:12px" 
+            src="https://open.spotify.com/embed/track/5lLKJdDPy7qbsta6d88lKE" 
+            width="300" height="152" frameborder="0" 
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+        </iframe>
+        <button onclick="continueToHeart()">Clique para continuar</button>
+    </div>
+    <div class="container" id="heartSection">
+        <div class="heart"></div>
+        <p>Meu coração bate por você!</p>
+        <button onclick="showDeclaration()">Clique para continuar</button>
+    </div>
+    <div class="container" id="declarationSection">
+        <img src="sarah.html.jpg" alt="Nossa foto">
+        <p>Você é a melhor parte da minha vida! Te amo para sempre! ❤</p>
+        <button onclick="showCounter()">Veja há quanto tempo estamos juntos</button>
+    </div>
+    <div class="container" id="counterSection">
+        <h2>Estamos juntos há:</h2>
+        <p id="contador"></p>
+    </div>
+
+    <script>
+        function startExperience() {
+            document.querySelector('.welcome').style.display = 'none';
+            document.getElementById('spotifySection').style.display = 'flex';
+        }
+
+        function continueToHeart() {
+            document.getElementById('spotifySection').style.display = 'none';
+            document.getElementById('heartSection').style.display = 'flex';
+        }
+
+        function showDeclaration() {
+            document.getElementById('heartSection').style.display = 'none';
+            document.getElementById('declarationSection').style.display = 'flex';
+        }
+
+        function showCounter() {
+            document.getElementById('declarationSection').style.display = 'none';
+            document.getElementById('counterSection').style.display = 'flex';
+            startCounter();
+        }
+
+        function startCounter() {
+            let startDate = new Date(2024, 11, 21);
+            setInterval(() => {
+                let now = new Date();
+                let diff = now - startDate;
+                let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                document.getElementById('contador').innerText = `${days} dias de amor!`;
+            }, 1000);
+        }
+
+        // Função para gerar corações flutuantes
+        function gerarCoracoesFlutuantes() {
+            const numCoracoes = 20;
+            for (let i = 0; i < numCoracoes; i++) {
+                setTimeout(criarCoracaoFlutuante, i * 300);
+            }
+        }
+
+        function criarCoracaoFlutuante() {
+            const coracao = document.createElement('div');
+            coracao.classList.add('floating-heart');
+            coracao.style.top = `${Math.random() * 100}vh`; // Correção: randomize o topo
+            coracao.style.left = `${Math.random() * 100}vw`; // Correção: randomize a posição horizontal
+
+            document.body.appendChild(coracao);
+
+            setTimeout(() => {
+                coracao.remove();
+            }, 5000);
+        }
+
+        // Função para gerar as estrelas no fundo
+        function gerarEstrelas() {
+            const numEstrelas = 100;
+            for (let i = 0; i < numEstrelas; i++) {
+                const estrela = document.createElement('div');
+                estrela.classList.add('star');
+                estrela.style.top = `${Math.random() * 100}vh`;
+                estrela.style.left = `${Math.random() * 100}vw`;
+                estrela.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                document.body.appendChild(estrela);
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
